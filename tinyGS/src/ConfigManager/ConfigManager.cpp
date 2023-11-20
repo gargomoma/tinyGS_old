@@ -86,6 +86,8 @@ ConfigManager::ConfigManager()
   server.on(RESTART_URL, [this] { handleRestart(); });
   server.on(REFRESH_CONSOLE_URL, [this] { handleRefreshConsole(); });
   server.on(REFRESH_WORLDMAP_URL, [this] { handleRefreshWorldmap(); });
+  server.on(JSON_URL, [this] { handleJsonStats(); });//@gargomoma
+  
   setupUpdateServer(
       [this](const char *updatePath) { httpUpdater.setup(&server, updatePath); },
       [this](const char *userName, char *password) { httpUpdater.updateCredentials(userName, password); });
@@ -278,6 +280,9 @@ void ConfigManager::handleDashboard()
 
   s += "<tr><td>Radio </td><td>" + String(Radio::getInstance().isReady() ? "<span class='G'>READY</span>" : "<span class='R'>NOT READY</span>") + "</td></tr>";
    s += "<tr><td>Noise floor </td><td>" + String(status.modeminfo.currentRssi) + "</td></tr>";
+  if (status.ptemp!=-1000.0 ){   
+	s += "<tr><td>SoC Temperature </td><td>" + String(status.ptemp) + "</td></tr>";
+  }
   s += F("</table></div>");
   s += F("<div class=\"card\"><h3>Modem Configuration</h3><table id=""modemconfig"">");
   s += "<tr><td>Listening to </td><td>" + String(status.modeminfo.satellite) + "</td></tr>";
@@ -458,6 +463,7 @@ void ConfigManager::handleRefreshWorldmap()
   Radio &radio = Radio::getInstance();
   radio.currentRssi();
   data_string += String(status.modeminfo.currentRssi) + ",";
+  data_string += String(status.ptemp) + ",";
   
   // last packet received data (for lastpacket id table data)
   data_string += String(status.lastPacketInfo.time) + ",";
