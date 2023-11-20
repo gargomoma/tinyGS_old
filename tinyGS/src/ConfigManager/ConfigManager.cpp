@@ -180,6 +180,12 @@ void ConfigManager::handleJsonStats()
   dashboard["noiseFloor"] = status.modeminfo.currentRssi;
   dashboard["socTemperature"] = status.ptemp != -1000.0 ? status.ptemp : -1000.0;
   dashboard["lowPower"] = getLowPower();
+  
+  JsonObject battery = jsonDoc.createNestedObject("battery");
+  battery["measure"] = getbattery();
+  battery["status"] = status.vbat != -1000.0 ? status.vbat : -1000.0;
+  battery["pin"] = getbattPin();
+  battery["scale"] = getbattScale();
 
   JsonObject modemConfig = jsonDoc.createNestedObject("modemConfig");
   modemConfig["satellite"] = status.modeminfo.satellite;
@@ -282,6 +288,9 @@ void ConfigManager::handleDashboard()
    s += "<tr><td>Noise floor </td><td>" + String(status.modeminfo.currentRssi) + "</td></tr>";
   if (status.ptemp!=-1000.0 ){   
 	s += "<tr><td>SoC Temperature </td><td>" + String(status.ptemp) + "</td></tr>";
+  }
+  if (status.vbat!=-1000.0 ){   
+	s += "<tr><td>Battery (V) </td><td>" + String(status.vbat) + "</td></tr>";
   }
   s += F("</table></div>");
   s += F("<div class=\"card\"><h3>Modem Configuration</h3><table id=""modemconfig"">");
@@ -464,6 +473,7 @@ void ConfigManager::handleRefreshWorldmap()
   radio.currentRssi();
   data_string += String(status.modeminfo.currentRssi) + ",";
   data_string += String(status.ptemp) + ",";
+  data_string += String(status.vbat) + ",";
   
   // last packet received data (for lastpacket id table data)
   data_string += String(status.lastPacketInfo.time) + ",";
@@ -755,7 +765,19 @@ void ConfigManager::parseAdvancedConf()
   {
     advancedConf.lowPower = doc["lowPower"];
   }
+
+  if (doc.containsKey(F("battery")))
+  {
+    JsonObject batteryConfig = doc["battery"];    
+    if (batteryConfig.containsKey(F("pin")) & batteryConfig.containsKey(F("scale")))
+    {
+    advancedConf.battery = true;
+	  advancedConf.battPin = batteryConfig["pin"];
+	  advancedConf.battScale = batteryConfig["scale"];
+    }
+  }
 }
+
 
 void ConfigManager::parseModemStartup()
 {

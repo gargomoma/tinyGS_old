@@ -214,6 +214,8 @@ void loop() {
   float ptemp = getProcessorTemperature();
   status.ptemp = ptemp!=-1000.0  ? ptemp : status.ptemp;
 
+  checkBattery();
+
   mqtt.loop();
   OTA::loop();
   if (configManager.getOledBright() != 0) displayUpdate();
@@ -359,4 +361,18 @@ float getProcessorTemperature() {
 		#endif
 	}
 	return temperature;
+}
+
+void checkBattery()
+{// based on mdkendall https://github.com/G4lile0/tinyGS/pull/177/files
+  #define BATTERY_INTERVAL 250
+  static unsigned long lastReadBattTime = 0;
+  
+  if (millis() - lastReadBattTime > BATTERY_INTERVAL) {
+    lastReadBattTime = millis();
+    if (configManager.getbattery()) {
+      float vbatMeas = (float)analogReadMilliVolts(configManager.getbattPin()) * configManager.getbattScale() * 0.001f;
+      status.vbat = (0.75 * status.vbat) + (0.25 * vbatMeas);
+    }
+  }
 }
