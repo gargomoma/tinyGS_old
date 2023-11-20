@@ -211,6 +211,9 @@ void loop() {
 
   // connected
 
+  float ptemp = getProcessorTemperature();
+  status.ptemp = ptemp!=-1000.0  ? ptemp : status.ptemp;
+
   mqtt.loop();
   OTA::loop();
   if (configManager.getOledBright() != 0) displayUpdate();
@@ -316,4 +319,44 @@ void printControls()
   Log::console(PSTR("b - reboot the board"));
   Log::console(PSTR("p - send test packet to nearby stations (to check transmission)"));
   Log::console(PSTR("------------------------------------"));
+}
+
+#if CONFIG_IDF_TARGET_ESP32S3 || CONFIG_IDF_TARGET_ESP32C3
+	#include "driver/temp_sensor.h"
+#else
+	#ifdef __cplusplus
+	extern "C" {
+	uint8_t temprature_sens_read();
+		}
+	#endif
+#endif
+
+float getProcessorTemperature() {
+  // Implementation for getting the processor temperature
+  // Checks temp every 30 sec
+  // Different method for each ESP SoC.
+    #define TEMP_INTERVAL 30000
+    static unsigned long lastTempTime = 0;
+  
+	float temperature = -1000.0;
+	if (millis() - lastTempTime > TEMP_INTERVAL) {
+		lastTempTime = millis();
+		#if CONFIG_IDF_TARGET_ESP32S3 || CONFIG_IDF_TARGET_ESP32C3
+			//float temperature
+			temp_sensor_config_t temp_sensor  = TSENS_CONFIG_DEFAULT();
+			temp_sensor_set_config(temp_sensor);
+			temp_sensor_start();
+			esp_err_t temp_reading = temp_sensor_read_celsius(&temperature);
+			temp_sensor_stop();
+			if (temp_reading != ESP_OK) {
+			  temperature = -1000.0; // Placeholder value for invalid reading
+				}	  
+		#else
+			uint8_t temp_raw = temprature_sens_read();
+			if (temp_raw != 128){
+				temperature = (temp_raw - 32) / 1.8f;			
+				}
+		#endif
+	}
+	return temperature;
 }
