@@ -67,7 +67,7 @@ struct TextFrame {
 };
 
 struct Status {
-  const uint32_t version = 2311201; // version year month day release
+  const uint32_t version = 2312151; // version year month day release
   const char* git_version = GIT_VERSION;
   float ptemp = -1000.0;
   float vbat =  = -1000.0;

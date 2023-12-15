@@ -58,7 +58,6 @@ ConfigManager::ConfigManager()
   {      0x3c,        0,        1,       UNUSED,         20,        21,      1,    8,     4,   UNUSED,  UNUSED,   5,      6,     7,     10,     0.0f,    UNUSED, UNUSED, "Custom ESP32-C3 433MHz SX1278"     },  // SX1278 @gargomoma
 #else
   {      0x3c,        4,        15,       16,           0,        25,      1,    18,     26,     12,   UNUSED , 14,      19,     27,     5,     0.0f,   UNUSED, UNUSED, "433MHz HELTEC WiFi LoRA 32 V1" },      // SX1278 @4m1g0
-  {      0x3c,        4,        15,       16,           0,        25,      1,    18,     26,     12,   UNUSED , 14,      19,     27,     5,     0.0f,       32,     33, "433MHz Ebyte E32-400M30S" },      // SX1278 @gargomoma  
   {      0x3c,        4,        15,       16,           0,        25,      2,    18,     26,     12,   UNUSED , 14,      19,     27,     5,     0.0f,   UNUSED, UNUSED, "863-928MHz HELTEC WiFi LoRA 32 V1" },  // SX1276
   {      0x3c,        4,        15,       16,           0,        25,      1,    18,     26,     35,   UNUSED , 14,      19,     27,     5,     0.0f,   UNUSED, UNUSED, "433MHz HELTEC WiFi LoRA 32 V2" },      // SX1278 @4m1g0  
   {      0x3c,        4,        15,       16,           0,        25,      2,    18,     26,     35,   UNUSED , 14,      19,     27,     5,     0.0f,   UNUSED, UNUSED, "863-928MHz HELTEC WiFi LoRA 32 V2" },  // SX1276
@@ -78,6 +77,7 @@ ConfigManager::ConfigManager()
   {      0x3c,       21,        22,     UNUSED,         0,        22,      8,     5,     26,     34,     32,    14,      19,     27,    18,     0.0f,   UNUSED, UNUSED, "2.4GHz ESP32 + SX1280"  },              //SX1280 @g4lile0
   {      0x3c,       21,        22,       16,          38,        22,      2,    18,     26,     33,   UNUSED , 14,      19,     27,     5,     0.0f,   UNUSED, UNUSED, "868-915MHzT-BEAM V1.0 + OLED"     },    // SX1276 @fafu
   {      0x3c,       21,        22,     UNUSED,         0,        25,      1,    18,     26,     33,   UNUSED , 23,      19,     27,     5,     0.0f,   UNUSED, UNUSED, "433MHz LILYGO T3_V1.6.1"     },         // SX1278
+  {      0x3c,        4,        15,       16,           0,        25,      1,    18,     26,     12,   UNUSED , 14,      19,     27,     5,     0.0f,       32,     33, "433MHz Ebyte E32-400M30S" },      // SX1278 @gargomoma   
  #endif
   })
 {
