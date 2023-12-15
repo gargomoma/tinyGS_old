@@ -180,6 +180,7 @@ void ConfigManager::handleJsonStats()
   dashboard["noiseFloor"] = status.modeminfo.currentRssi;
   dashboard["socTemperature"] = status.ptemp != -1000.0 ? status.ptemp : -1000.0;
   dashboard["lowPower"] = getLowPower();
+  dashboard["bootTime"] = status.bootTime;
   
   JsonObject battery = jsonDoc.createNestedObject("battery");
   battery["measure"] = getbattery();

@@ -159,6 +159,8 @@ void setup()
   configManager.delay(1000);
   mqtt.begin();
 
+  status.bootTime = time (NULL) - millis()/1000;
+
   if (configManager.getOledBright() == 0)
   {
     displayTurnOff();
